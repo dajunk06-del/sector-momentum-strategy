@@ -1,5 +1,4 @@
-name: Monthly momentum signal
-
+name: .github/workflows/monthly.yml
 on:
   schedule:
     - cron: "0 13 1 * *"   # 1st of every month, 8:00 AM Central (13:00 UTC)
