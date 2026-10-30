@@ -44,7 +44,7 @@ A GitHub Actions workflow ([.github/workflows/monthly.yml](.github/workflows/mon
 | --- | --- |
 | `momentum.py` | Monthly signal and live tracking |
 | `backtest.py` | Full backtest, results table and chart |
-| `excel/Sector_Momentum_Backtest.xlsx` | The original Excel model, with adjustable inputs and a robustness check across 20 settings |
+| `Sector_Momentum_Backtest.xlsx` | The original Excel model, with adjustable inputs and a robustness check across 20 settings |
 | `live_log.csv` | Every live signal and its realized return |
 
 Run it yourself: `pip install -r requirements.txt`, then `python momentum.py` or `python backtest.py`.
