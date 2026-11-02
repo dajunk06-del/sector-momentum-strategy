@@ -27,16 +27,32 @@ jobs:
       - name: Update the backtest
         run: python backtest.py
 
+      - name: Calculate this month's stock picks
+        continue-on-error: true   # a Yahoo hiccup here shouldn't block the sector update
+        run: python stock_momentum.py
+
+      - name: Update the stock backtest
+        continue-on-error: true
+        run: python stock_backtest.py
+
       - name: Save results to the repo
         id: save
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add live_log.csv latest_signal.md backtest_results.md backtest_chart.png
+          for f in stock_live_log.csv stock_signal.md stock_backtest_results.md stock_backtest_chart.png; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
           if git diff --cached --quiet -- live_log.csv; then
             echo "new_signal=false" >> "$GITHUB_OUTPUT"
           else
             echo "new_signal=true" >> "$GITHUB_OUTPUT"
+          fi
+          if git diff --cached --quiet -- stock_live_log.csv; then
+            echo "new_stock_signal=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new_stock_signal=true" >> "$GITHUB_OUTPUT"
           fi
           git commit -m "Monthly signal update" || echo "Nothing to commit"
           git push
@@ -49,3 +65,12 @@ jobs:
           gh issue create \
             --title "$(head -1 latest_signal.md | sed 's/^# //')" \
             --body-file latest_signal.md
+
+      - name: Post the stock picks as an issue
+        if: steps.save.outputs.new_stock_signal == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "$(head -1 stock_signal.md | sed 's/^# //')" \
+            --body-file stock_signal.md
