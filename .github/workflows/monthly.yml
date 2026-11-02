@@ -22,18 +22,18 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Calculate this month's picks
-        run: python momentum.py
+        run: python src/momentum.py
 
       - name: Update the backtest
-        run: python backtest.py
+        run: python src/backtest.py
 
       - name: Save results to the repo
         id: save
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add live_log.csv latest_signal.md backtest_results.md backtest_chart.png
-          if git diff --cached --quiet -- live_log.csv; then
+          git add results/
+          if git diff --cached --quiet -- results/live_log.csv; then
             echo "new_signal=false" >> "$GITHUB_OUTPUT"
           else
             echo "new_signal=true" >> "$GITHUB_OUTPUT"
@@ -47,5 +47,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh issue create \
-            --title "$(head -1 latest_signal.md | sed 's/^# //')" \
-            --body-file latest_signal.md
+            --title "$(head -1 results/latest_signal.md | sed 's/^# //')" \
+            --body-file results/latest_signal.md

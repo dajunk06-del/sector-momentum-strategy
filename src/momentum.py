@@ -7,14 +7,15 @@ Each month-end:
   3. Hold the top 3 at one-third each for the next month.
 
 Run this script once a month (GitHub Actions does it automatically). It:
-  - writes the new picks to latest_signal.md
-  - appends them to live_log.csv
+  - writes the new picks to results/latest_signal.md
+  - appends them to results/live_log.csv
   - fills in last month's realized return vs. SPY for the previous picks
 """
 
 import os
 import sys
 from datetime import date
+from pathlib import Path
 
 import pandas as pd
 
@@ -27,8 +28,9 @@ NAMES = {
 BENCHMARK = "SPY"
 LOOKBACK = 12   # months
 TOP_N = 3
-LOG_FILE = "live_log.csv"
-SIGNAL_FILE = "latest_signal.md"
+RESULTS = Path(__file__).resolve().parent.parent / "results"
+LOG_FILE = RESULTS / "live_log.csv"
+SIGNAL_FILE = RESULTS / "latest_signal.md"
 
 
 def load_monthly_prices(start="1998-12-01"):

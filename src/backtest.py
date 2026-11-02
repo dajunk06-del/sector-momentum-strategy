@@ -3,8 +3,8 @@ Backtest of the sector momentum strategy, Feb 2000 to the latest month-end.
 Mirrors the Excel model in excel/Sector_Momentum_Backtest.xlsx.
 
 Outputs:
-  backtest_results.md  - performance table vs. SPY and an equal-weight mix of the 9 sectors
-  backtest_chart.png   - growth of $10,000 and drawdowns
+  results/backtest_results.md  - performance table vs. SPY and an equal-weight mix of the 9 sectors
+  results/backtest_chart.png   - growth of $10,000 and drawdowns
 """
 
 import numpy as np
@@ -13,7 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from momentum import SECTORS, BENCHMARK, LOOKBACK, TOP_N, load_monthly_prices
+from momentum import SECTORS, BENCHMARK, LOOKBACK, TOP_N, RESULTS, load_monthly_prices
 
 COST_BPS = 10        # trading cost per $ traded
 RISK_FREE = 0.02     # assumed average T-bill yield, for the Sharpe ratio
@@ -54,7 +54,7 @@ def main():
 
     table = pd.DataFrame({k: stats(v) for k, v in series.items()})
     period = f"{strat.index[0].strftime('%b %Y')} - {strat.index[-1].strftime('%b %Y')}"
-    with open("backtest_results.md", "w") as f:
+    with open(RESULTS / "backtest_results.md", "w") as f:
         f.write(f"## Backtest results ({period})\n\n")
         f.write(table.to_markdown() + "\n")
     print(period)
@@ -78,7 +78,7 @@ def main():
         ax.spines[["top", "right"]].set_visible(False)
         ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
-    fig.savefig("backtest_chart.png", dpi=120)
+    fig.savefig(RESULTS / "backtest_chart.png", dpi=120)
 
 
 if __name__ == "__main__":

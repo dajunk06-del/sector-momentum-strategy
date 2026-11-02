@@ -2,7 +2,7 @@
 
 A rules-based strategy that holds the three strongest S&P 500 sectors each month, backtested from 2000 to 2026 and tracked live with an automated monthly signal.
 
-**Current picks:** see [latest_signal.md](latest_signal.md) · **Live track record:** [live_log.csv](live_log.csv)
+**Current picks:** see [latest_signal.md](results/latest_signal.md) · **Live track record:** [live_log.csv](results/live_log.csv)
 
 ## The rules
 
@@ -24,7 +24,7 @@ The settings (12-month lookback, top 3) were chosen from published research on i
 | Max drawdown | -39.2% | -50.8% | -49.1% |
 | $10,000 grows to | $98,271 | $87,422 | $98,800 |
 
-![Growth of $10,000 and drawdowns](backtest_chart.png)
+![Growth of $10,000 and drawdowns](results/backtest_chart.png)
 
 The strategy matched the market's return while cutting the worst drawdown from 51% to 39%. It held up best in 2002, 2008 and 2022, and lagged in fast rebounds such as 2009 and 2023. Results are net of a 10 bps trading cost, use dividend-adjusted prices, and avoid look-ahead bias: picks made at one month-end only earn the following month's return.
 
@@ -33,8 +33,8 @@ The strategy matched the market's return while cutting the worst drawdown from 5
 A GitHub Actions workflow ([.github/workflows/monthly.yml](.github/workflows/monthly.yml)) runs on the 1st of every month:
 
 1. Downloads the latest month-end prices from Yahoo Finance.
-2. Ranks the sectors and writes the new picks to `latest_signal.md`.
-3. Records last month's realized return vs. SPY in `live_log.csv`.
+2. Ranks the sectors and writes the new picks to `results/latest_signal.md`.
+3. Records last month's realized return vs. SPY in `results/live_log.csv`.
 4. Re-runs the backtest and updates the chart.
 5. Opens an issue with the picks, which triggers an email notification.
 
@@ -42,12 +42,12 @@ A GitHub Actions workflow ([.github/workflows/monthly.yml](.github/workflows/mon
 
 | File | What it is |
 | --- | --- |
-| `momentum.py` | Monthly signal and live tracking |
-| `backtest.py` | Full backtest, results table and chart |
-| `Sector_Momentum_Backtest.xlsx` | The original Excel model, with adjustable inputs and a robustness check across 20 settings |
-| `live_log.csv` | Every live signal and its realized return |
+| `src/momentum.py` | Monthly signal and live tracking |
+| `src/backtest.py` | Full backtest, results table and chart |
+| `excel/Sector_Momentum_Backtest.xlsx` | The original Excel model, with adjustable inputs and a robustness check across 20 settings |
+| `results/live_log.csv` | Every live signal and its realized return |
 
-Run it yourself: `pip install -r requirements.txt`, then `python momentum.py` or `python backtest.py`.
+Run it yourself: `pip install -r requirements.txt`, then `python src/momentum.py` or `python src/backtest.py`.
 
 ## Limitations
 
